@@ -7,11 +7,7 @@ $(window).on('load',function(){
 		
 		tiles : new L.StamenTileLayer( "watercolor", {noWrap:true} ),
 		
-		markers : new L.LayerGroup(),
-
-		//markers : new L.MarkerClusterGroup({maxClusterRadius:10, zoomToBoundsOnClick:false}),
-
-		spiderfier : new OverlappingMarkerSpiderfier(this.map),
+		markers : new L.MarkerClusterGroup({maxClusterRadius:10, zoomToBoundsOnClick:false}),
 
 		latlngs : [],
 
@@ -23,7 +19,7 @@ $(window).on('load',function(){
 			var latlng = new L.LatLng(value.lat, value.lng);
 			var marker = L.marker(latlng);
 			var popup = "<img src='"+value.img[0]+"' width='"+value.img[1]+"' height='"+value.img[2]+"' class='profile-img' /><h2>"+value.nicename+"</h2>"+value.ref;
-			marker.popup(popup);
+			marker.bindPopup(popup).openPopup();
 			couchmap.markers.addLayer(marker);
 			couchmap.latlngs.push(latlng);
 		},
@@ -34,7 +30,9 @@ $(window).on('load',function(){
 			$.getJSON('/map/scrape/'+name, function(response,status,xhr){
 				$.each(response, callback);
 				var bounds = new L.LatLngBounds(couchmap.latlngs);
-				couchmap.markers.addTo(couchmap.map);
+				couchmap.markers.addTo(couchmap.map).on('clusterclick', function (a) {
+				    a.layer.spiderfy();
+				});
 				couchmap.map.fitBounds(bounds);
 				$("#loader").hide();
 			});
