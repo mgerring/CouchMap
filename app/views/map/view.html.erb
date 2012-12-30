@@ -1,0 +1,39 @@
+<% content_for :header do %>
+	<%= stylesheet_link_tag "http://cdn.leafletjs.com/leaflet-0.4.5/leaflet.css" %>
+<% end %>
+
+<header>
+	<h1>CouchMap</h1>
+</header>
+
+<div id="main">
+	<form id="search" name="search" action="" method="POST">
+		<input autocomplete="off" type="text" name="name" placeholder="Type in your CouchSurfing username" />
+		<input type="submit" value="Map Me" />
+	</form>
+	<div id="map_container">
+		<div id="loader">
+			<span id="loading_icon">Loading...</span>
+		</div>
+		<div id="map"></div>
+	</div>
+
+	<footer>
+		Created by <a href="http://matthewgerring.com">Matthew Gerring</a> 
+		&middot; 
+		<a href="http://twitter.com/mbgerring">twitter</a> 
+		&middot; 
+		<a href="http://github.com/mgerring">github</a> 
+		&middot; 
+		<a href="http://couchsurfing.org/people/beatpanda">CouchSurfing</a>
+	</footer>
+
+	<% content_for :footer do %>
+		<%= javascript_tag do %>
+			var mapdata = {};
+			mapdata.username = '<%= j @name  %>';
+		<% end %>
+		<%= javascript_include_tag "http://cdn.leafletjs.com/leaflet-0.4.5/leaflet.js" %>
+		<%= javascript_include_tag "http://maps.stamen.com/js/tile.stamen.js?v1.2.1" %>
+	<% end %>
+</div>

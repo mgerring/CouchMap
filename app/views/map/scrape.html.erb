@@ -1,0 +1,11 @@
+<h1>Map#scrape</h1>
+<p>Find me in app/views/map/scrape.html.erb</p>
+<h2>References for <%= @name %> at <%= @url %></h2>
+<% @refs.each do |ref| %>
+	<a href="<%= ref['href'] %>">
+		<%= ref['img'].html_safe %>
+		<%= ref['loc_name'] %>
+		<%= ref['date'] %>
+	</a>
+<% end %>
+	
