@@ -19,16 +19,18 @@ class MapController < ApplicationController
   	reccos = doc.css('.reference_from_to_box>.reference_from')
   	@refs = []
   	reccos.each do |rec|
-  		name = rec.css('.profile-image').first.attr('href')
-  		name = name.split('/').last
       loc_date = rec.css('small')
       date = loc_date.css('sup').first.content
-      loc = loc_date.first.content.sub(date,'')
-      loc_name = loc
-      loc = Geocoder.search(loc).first
-      puts loc
+      loc_name = loc_date.first.content.sub(date,'')
+      loc = Geocoder.search(loc_name).first
+      !loc ? next : #nothing
       lat = loc.latitude
       lng = loc.longitude
+      name = rec.css('.profile-image').first.attr('href').split('/').last
+      host = rec.css('[src="/images/icon_hosted.gif"]').first
+      host = host ? host.attr('title') : nil
+      surfer = rec.css('[src="/images/icon_surfed_with.gif"]').first
+      surfer = surfer ? surfer.attr('title') : nil
       ref = rec.css('p').first.content
       img = rec.css('.profile-image img').first
   		single_ref = {
@@ -36,6 +38,8 @@ class MapController < ApplicationController
         'nicename' => img['alt'],
   			'username' => name,
         'loc_name' => loc_name,
+        'host' => host,
+        'surfer' => surfer,
         'date' => date,
         'lat' => lat,
         'lng' => lng,

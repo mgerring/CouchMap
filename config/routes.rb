@@ -1,11 +1,11 @@
 Resumatic::Application.routes.draw do
   match "map/scrape/:name" => 'map#scrape', :name => /[A-Za-z0-9._-]+/
-  match "map/view/:name" => 'map#view', :name => /[A-Za-z0-9._-]+/
+  match ":name" => 'map#view', :name => /[A-Za-z0-9._-]+/
   resources :projects
   resources :skills
   resources :resumes
   get "home/index"
-
+  root :to => 'map#view'
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
@@ -55,7 +55,6 @@ Resumatic::Application.routes.draw do
 
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.
-  root :to => 'home#index'
 
   # See how all your routes lay out with "rake routes"
 

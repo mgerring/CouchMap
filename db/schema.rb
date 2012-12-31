@@ -10,24 +10,3 @@
 # you'll amass, the slower it'll run and the greater likelihood for issues).
 #
 # It's strongly recommended to check this file into your version control system.
-
-ActiveRecord::Schema.define(:version => 20121210081713) do
-
-  create_table "resumes", :force => true do |t|
-    t.string   "slug"
-    t.string   "company"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
-  create_table "skills", :force => true do |t|
-    t.string   "name"
-    t.datetime "date"
-    t.text     "description"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
-  end
-
-  add_index "skills", ["name"], :name => "index_skills_on_name", :unique => true
-
-end

@@ -12,6 +12,5 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require oms
 //= require_tree .
 //= require live

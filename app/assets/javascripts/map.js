@@ -7,7 +7,7 @@ $(window).on('load',function(){
 		
 		tiles : new L.StamenTileLayer( "watercolor", {noWrap:true} ),
 		
-		markers : new L.MarkerClusterGroup({maxClusterRadius:10, zoomToBoundsOnClick:false}),
+		markers : new L.MarkerClusterGroup({maxClusterRadius:20, zoomToBoundsOnClick:false}),
 
 		latlngs : [],
 
@@ -18,7 +18,18 @@ $(window).on('load',function(){
 		addPointsToMap : function(index, value) {
 			var latlng = new L.LatLng(value.lat, value.lng);
 			var marker = L.marker(latlng);
-			var popup = "<img src='"+value.img[0]+"' width='"+value.img[1]+"' height='"+value.img[2]+"' class='profile-img' /><h2>"+value.nicename+"</h2>"+value.ref;
+			var popup = "<img src='"+value.img[0]+"' width='"+value.img[1]+"' height='"+value.img[2]+"' class='profile-img' />";
+			popup += "<h2>"+value.nicename+"</h2>";
+			popup += "<div class='meta'>";
+			popup += "<span class='location'>"+value.loc_name.replace(/^\s\s*/, '').replace(/\s\s*$/, '')+"</span>";
+			if (value.host) {
+				popup += "<span class='host'>"+value.host+"</span>";
+			}
+			if (value.surfer) {
+				popup += "<span class='surfer'>"+value.surfer+"</span>";	
+			}
+			popup += "</div>";
+			popup += value.ref;
 			marker.bindPopup(popup).openPopup();
 			couchmap.markers.addLayer(marker);
 			couchmap.latlngs.push(latlng);
@@ -39,15 +50,27 @@ $(window).on('load',function(){
 		},
 
 		bindSearchForm : function(el){
-			$(el).submit($.proxy(function(e){
+			var el = $(el);
+			el.submit(function(e){
 				e.preventDefault();
+				var name = el.find('input[name="name"]').val();
+				window.History.pushState({name:name},'Results for '+name,'/'+name);
 				$("#loader").show();
-				this.loadPoints( $(el).find('input[name="name"]').val() );
-			}, this));
+			});
+			$(window).on('statechange', $.proxy(function(){
+				$("#loader").show();
+				var state = window.History.getState();
+				el.find('input[name="name"]').val( state.data.name );
+				this.loadPoints( state.data.name );
+			},this));
 		}
 
 	}
 	couchmap.initMap();
 	couchmap.bindSearchForm('form');
-	couchmap.loadPoints(mapdata.username);
+	if(mapdata.username) {
+		couchmap.loadPoints(mapdata.username);
+	} else {
+		$("#loader").hide();
+	}
 });
