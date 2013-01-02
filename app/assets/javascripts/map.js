@@ -1,8 +1,6 @@
-// Place all the behaviors and hooks related to the matching controller here.
-// All this logic will automatically be available in application.js.
-
 $(window).on('load',function(){
 	var couchmap = {
+		//TODO: Figure out how to reference 'this' instead of the global 'couchmap' in all instances
 		map : L.map('map').fitWorld(),
 		
 		tiles : new L.StamenTileLayer( "watercolor", {noWrap:true} ),
@@ -11,15 +9,18 @@ $(window).on('load',function(){
 
 		latlngs : [],
 
+		//startup
 		initMap : function() {
 			this.map.addLayer(this.tiles);
 		},
 		
+		//construct markers, place on map
 		addPointsToMap : function(index, value) {
 			var latlng = new L.LatLng(value.lat, value.lng);
 			var marker = L.marker(latlng);
+			//TODO: Do this with Underscore templates instead.
 			var popup = "<img src='"+value.img[0]+"' width='"+value.img[1]+"' height='"+value.img[2]+"' class='profile-img' />";
-			popup += "<h2>"+value.nicename+"</h2>";
+			popup += "<h2><a href='/"+value.username+"'>"+value.nicename+"</a></h2>";
 			popup += "<div class='meta'>";
 			popup += "<span class='location'>"+value.loc_name.replace(/^\s\s*/, '').replace(/\s\s*$/, '')+"</span>";
 			if (value.host) {
@@ -35,6 +36,7 @@ $(window).on('load',function(){
 			couchmap.latlngs.push(latlng);
 		},
 		
+		//get data from server
 		loadPoints : function(name) {
 			this.markers.clearLayers();
 			var callback = this.addPointsToMap;
@@ -49,6 +51,7 @@ $(window).on('load',function(){
 			});
 		},
 
+		//make the form nice
 		bindSearchForm : function(el){
 			var el = $(el);
 			el.submit(function(e){
@@ -69,8 +72,10 @@ $(window).on('load',function(){
 	couchmap.initMap();
 	couchmap.bindSearchForm('form');
 	if(mapdata.username) {
+		//Did we jump staright to a map page? If so, load the data
 		couchmap.loadPoints(mapdata.username);
 	} else {
+		//We're on the homepage, turn the loader off
 		$("#loader").hide();
 	}
 });
