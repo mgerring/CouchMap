@@ -13,9 +13,13 @@ class MapController < ApplicationController
   def scrape
     Geocoder.configure(:lookup => :yandex)
   	@name = params[:name]
-  	@url = "https://www.couchsurfing.org/people/#{@name}"
-  	profile = CouchSurfer.get("https://www.couchsurfing.org/people/#{@name}?all_references=1")
-  	doc = Nokogiri::HTML(profile)
+  	if @name.include? "profile.html"
+      url = "https://www.couchsurfing.org/#{@name}?id=#{params[:id]}&all_references=1"
+    else
+      url = "https://www.couchsurfing.org/people/#{@name}?all_references=1"
+    end
+  	profile = CouchSurfer.get(url)
+    doc = Nokogiri::HTML(profile)
   	reccos = doc.css('.reference_from_to_box>.reference_from')
   	@refs = []
   	reccos.each do |rec|
@@ -43,7 +47,8 @@ class MapController < ApplicationController
         'date' => date,
         'lat' => lat,
         'lng' => lng,
-        'ref' => ref
+        'ref' => ref,
+        'url_used' => url
   		}
   		@refs.push(single_ref)
   	end
@@ -52,5 +57,8 @@ class MapController < ApplicationController
 
   def view
     @name = params[:name]
+    if params[:id]
+      @name = @name+"?id="+params[:id]
+    end
   end
 end
