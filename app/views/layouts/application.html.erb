@@ -18,7 +18,9 @@
     <meta property="og:title" content="CouchMap" />
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content="<%= request.protocol + request.host_with_port + request.fullpath %>" />
-	<meta property="og:description" content="Map all your CouchSurfing adventures, beautifully." />
+	<%= yield_or :ogp do %>
+		<meta property="og:description" content="Map all your CouchSurfing adventures, beautifully." />
+	<% end %>
 	<meta property="og:image" content="<%= asset_url('ogp.png') %>" />
 	<%= stylesheet_link_tag "application", :media => "all" %>
 	<%= yield :header %>
@@ -31,4 +33,7 @@
 </body>
 <%= yield :footer %>
 <%= javascript_include_tag "application" %>
+<% if Rails.env.development? %>
+  <%= javascript_include_tag "live" %>
+<% end %>
 </html>

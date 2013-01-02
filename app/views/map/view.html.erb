@@ -2,6 +2,10 @@
 	<%= stylesheet_link_tag "http://cdn.leafletjs.com/leaflet-0.4.5/leaflet.css" %>
 <% end %>
 
+<% content_for :ogp do %>
+	<meta property="og:description" content="See <%= @name %>'s CouchSurfing adventures mapped, beautifully." />
+<% end %>
+
 <header>
 	<h1>CouchMap</h1>
 </header>
