@@ -61,5 +61,7 @@ module Resumatic
 
     # Required to avoid asset compilation failure on Heroku
     config.assets.initialize_on_precompile = false
+
+    ActionDispatch::ParamsParser::DEFAULT_PARSERS.delete(Mime::XML) 
   end
 end
